@@ -1,5 +1,6 @@
 require('pg')
 require_relative('../db/sql_runner')
+require_relative('./artist')
 
 class Album
   attr_accessor :title, :genre
@@ -9,7 +10,15 @@ class Album
     @artist_id = options['artist_id'].to_i
     @title = options['title']
     @genre = options['genre']
+    @id = options['id'].to_i if options['id']
 
+  end
+
+  def Album.delete_all
+    sql = "
+    DELETE FROM albums
+    "
+    SqlRunner.run(sql)
   end
 
   def save()
@@ -49,6 +58,12 @@ class Album
     artist = Artist.new(artist_data)
     # album = result.map {|artist| Artist.new(album)}
     return artist
+  end
+
+  def delete
+    sql = "DELETE FROM albums WHERE id = $1"
+    values = [@id]
+    SqlRunner.run(sql, values)
   end
 
 end
