@@ -3,8 +3,8 @@ require_relative('../db/sql_runner')
 require_relative('./artist')
 
 class Album
-  attr_accessor :title, :genre
-  attr_reader :id, :artist_id
+  attr_accessor :title, :genre, :id, :artist_id
+  # attr_reader
 
   def initialize( options )
     @artist_id = options['artist_id'].to_i
@@ -12,6 +12,28 @@ class Album
     @genre = options['genre']
     @id = options['id'].to_i if options['id']
 
+  end
+
+  def update
+    # db = PG.connect({dbname: 'pizza_shop', host: 'localhost'})
+    sql = "
+      UPDATE albums
+      SET (
+        artist_id,
+        title,
+        genre
+      ) =
+      (
+        $1, $2, $3
+      )
+      WHERE id = $4
+    "
+    values = [@artist_id, @title, @genre, @id]
+    SqlRunner.run(sql, values)
+
+    # db.prepare("update", sql)
+    # db.exec_prepared("update", values)
+    # db.close()
   end
 
   def Album.delete_all

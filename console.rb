@@ -3,7 +3,7 @@ require_relative('./models/album')
 require_relative('./models/artist')
 
 Album.delete_all
-# Artist.delete_all
+Artist.delete_all
 
 
 artist1 = Artist.new({
